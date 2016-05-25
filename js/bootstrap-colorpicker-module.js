@@ -1,83 +1,92 @@
 angular.module('colorpicker.module', [])
+
+	// ========================================================================
+	// ============================== HELPER ==================================
+	// ========================================================================
+	
     .factory('Helper', function () {
-      'use strict';
-      return {
-        closestSlider: function (elem) {
-          var matchesSelector = elem.matches || elem.webkitMatchesSelector || elem.mozMatchesSelector || elem.msMatchesSelector;
-          if (matchesSelector.bind(elem)('I')) {
-            return elem.parentNode;
-          }
-          return elem;
-        },
-        getOffset: function (elem, fixedPosition) {
-          var
-            scrollX = 0,
-            scrollY = 0,
-            rect = elem.getBoundingClientRect();
-          while (elem && !isNaN(elem.offsetLeft) && !isNaN(elem.offsetTop)) {
-            if (!fixedPosition && elem.tagName === 'BODY') {
-              scrollX += document.documentElement.scrollLeft || elem.scrollLeft;
-              scrollY += document.documentElement.scrollTop || elem.scrollTop;
-            } else {
-              scrollX += elem.scrollLeft;
-              scrollY += elem.scrollTop;
-            }
-            elem = elem.offsetParent;
-          }
-          return {
-            top: rect.top + window.pageYOffset,
-            left: rect.left + window.pageXOffset,
-            scrollX: scrollX,
-            scrollY: scrollY
-          };
-        },
-        // a set of RE's that can match strings and generate color tuples. https://github.com/jquery/jquery-color/
-        stringParsers: [
-          {
-            re: /rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*(?:,\s*(\d+(?:\.\d+)?)\s*)?\)/,
-            parse: function (execResult) {
-              return [
-                execResult[1],
-                execResult[2],
-                execResult[3],
-                execResult[4]
-              ];
-            }
-          },
-          {
-            re: /rgba?\(\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*(?:,\s*(\d+(?:\.\d+)?)\s*)?\)/,
-            parse: function (execResult) {
-              return [
-                2.55 * execResult[1],
-                2.55 * execResult[2],
-                2.55 * execResult[3],
-                execResult[4]
-              ];
-            }
-          },
-          {
-            re: /#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})/,
-            parse: function (execResult) {
-              return [
-                parseInt(execResult[1], 16),
-                parseInt(execResult[2], 16),
-                parseInt(execResult[3], 16)
-              ];
-            }
-          },
-          {
-            re: /#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])/,
-            parse: function (execResult) {
-              return [
-                parseInt(execResult[1] + execResult[1], 16),
-                parseInt(execResult[2] + execResult[2], 16),
-                parseInt(execResult[3] + execResult[3], 16)
-              ];
-            }
-          }
-        ]
-      };
+		'use strict';
+		return {
+			closestSlider: function (elem) {
+			var matchesSelector = elem.matches || elem.webkitMatchesSelector || elem.mozMatchesSelector || elem.msMatchesSelector;
+			if (matchesSelector.bind(elem)('I')) {
+				return elem.parentNode;
+			}
+			return elem;
+		}
+
+		,getOffset: function (elem, fixedPosition) {
+			var scrollX = 0, scrollY = 0,
+			rect = elem.getBoundingClientRect();
+			while (elem && !isNaN(elem.offsetLeft) && !isNaN(elem.offsetTop)) {
+				if (!fixedPosition && elem.tagName === 'BODY') {
+					scrollX += document.documentElement.scrollLeft || elem.scrollLeft;
+					scrollY += document.documentElement.scrollTop || elem.scrollTop;
+				} else {
+					scrollX += elem.scrollLeft;
+					scrollY += elem.scrollTop;
+				}
+				elem = elem.offsetParent;
+			}
+			return {
+				top: rect.top + window.pageYOffset,
+				left: rect.left + window.pageXOffset,
+				scrollX: scrollX,
+				scrollY: scrollY
+			};
+		},
+		// a set of RE's that can match strings and generate color tuples. https://github.com/jquery/jquery-color/
+		stringParsers: [
+				{
+					re: /rgba?\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*(?:,\s*(\d+(?:\.\d+)?)\s*)?\)/,
+					parse: function (execResult) {
+					  return [
+						execResult[1],
+						execResult[2],
+						execResult[3],
+						execResult[4]
+					  ];
+					}
+				},
+				{
+					re: /rgba?\(\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*(?:,\s*(\d+(?:\.\d+)?)\s*)?\)/,
+					parse: function (execResult) {
+					  return [
+						2.55 * execResult[1],
+						2.55 * execResult[2],
+						2.55 * execResult[3],
+						execResult[4]
+					  ];
+					}
+				},
+				{
+					re: /#([a-fA-F0-9]{2})([a-fA-F0-9]{2})([a-fA-F0-9]{2})/,
+					parse: function (execResult) {
+					  return [
+						parseInt(execResult[1], 16),
+						parseInt(execResult[2], 16),
+						parseInt(execResult[3], 16)
+					  ];
+					}
+				},
+				{
+					re: /#([a-fA-F0-9])([a-fA-F0-9])([a-fA-F0-9])/,
+					parse: function (execResult) {
+					  return [
+						parseInt(execResult[1] + execResult[1], 16),
+						parseInt(execResult[2] + execResult[2], 16),
+						parseInt(execResult[3] + execResult[3], 16)
+					  ];
+					}
+				}
+			]
+		};
     })
+	
+	// ========================================================================
+	// =============================== COLOR ==================================
+	// ========================================================================
+	
     .factory('Color', ['Helper', function (Helper) {
       'use strict';
       return {
@@ -184,6 +193,11 @@ angular.module('colorpicker.module', [])
         }
       };
     }])
+	
+	// ========================================================================
+	// =============================== SLIDER =================================
+	// ========================================================================
+	
     .factory('Slider', ['Helper', function (Helper) {
       'use strict';
       var
@@ -259,42 +273,60 @@ angular.module('colorpicker.module', [])
         }
       };
     }])
+	
+	// ========================================================================
+	// ============================= COLORPICKER ==============================
+	// ========================================================================
+	
     .directive('colorpicker', ['$document', '$compile', 'Color', 'Slider', 'Helper', function ($document, $compile, Color, Slider, Helper) {
       'use strict';
       return {
         require: '?ngModel',
         restrict: 'A',
         link: function ($scope, elem, attrs, ngModel) {
-          var
-              thisFormat = attrs.colorpicker ? attrs.colorpicker : 'hex',
-              position = angular.isDefined(attrs.colorpickerPosition) ? attrs.colorpickerPosition : 'bottom',
-              inline = angular.isDefined(attrs.colorpickerInline) ? attrs.colorpickerInline : false,
-              fixedPosition = angular.isDefined(attrs.colorpickerFixedPosition) ? attrs.colorpickerFixedPosition : false,
-              target = angular.isDefined(attrs.colorpickerParent) ? elem.parent() : angular.element(document.body),
-              withInput = angular.isDefined(attrs.colorpickerWithInput) ? attrs.colorpickerWithInput : false,
-              inputTemplate = withInput ? '<input type="text" name="colorpicker-input" spellcheck="false">' : '',
-              closeButton = !inline ? '<button type="button" class="close close-colorpicker">&times;</button>' : '',
-              template =
-                  '<div class="colorpicker dropdown">' +
-                      '<div class="dropdown-menu">' +
-                      '<colorpicker-saturation><i></i></colorpicker-saturation>' +
-                      '<colorpicker-hue><i></i></colorpicker-hue>' +
-                      '<colorpicker-alpha><i></i></colorpicker-alpha>' +
-                      '<colorpicker-preview></colorpicker-preview>' +
-                      inputTemplate +
-                      closeButton +
-                      '</div>' +
-                      '</div>',
-              colorpickerTemplate = angular.element(template),
-              pickerColor = Color,
-              sliderAlpha,
-              sliderHue = colorpickerTemplate.find('colorpicker-hue'),
-              sliderSaturation = colorpickerTemplate.find('colorpicker-saturation'),
-              colorpickerPreview = colorpickerTemplate.find('colorpicker-preview'),
-              pickerColorPointers = colorpickerTemplate.find('i');
+			var
+				thisFormat = attrs.colorpicker ? attrs.colorpicker : 'hex',
+				position = angular.isDefined(attrs.colorpickerPosition) ? attrs.colorpickerPosition : 'bottom',
+				inline = angular.isDefined(attrs.colorpickerInline) ? attrs.colorpickerInline : false,
+				fixedPosition = angular.isDefined(attrs.colorpickerFixedPosition) ? attrs.colorpickerFixedPosition : false,
+				target = angular.isDefined(attrs.colorpickerParent) ? elem.parent() : angular.element(document.body),
+				withInput = angular.isDefined(attrs.colorpickerWithInput) ? attrs.colorpickerWithInput : false,
+				inputTemplate = withInput ? '<input type="text" class="colorpicker-row-col" name="colorpicker-input" spellcheck="false">' : '',
+				pickerButton = !inline ? '<button class="colorpicker-probe-btn colorpicker-row-col" type="button">&nbsp;</button>' : '',
+				closeButton = !inline ? '<button type="button" class="colorpicker-row-col close close-colorpicker">&times;</button>' : '',
+				template =
+				  '<div class="colorpicker dropdown">' +
+					  '<div class="dropdown-menu">' +
+					  '<colorpicker-saturation><i></i></colorpicker-saturation>' +
+					  '<colorpicker-hue><i></i></colorpicker-hue>' +
+					  '<colorpicker-alpha><i></i></colorpicker-alpha>' +
+					  '<colorpicker-preview></colorpicker-preview>' +
+					  '<span class="colorpicker-row">' +
+					  inputTemplate +
+					  pickerButton +
+					  closeButton +
+					  '</span>' +
+					  '</div>' +
+					  '</div>',
+				colorpickerTemplate = angular.element(template),
+				pickerColor = Color,
+				sliderAlpha,
+				sliderHue = colorpickerTemplate.find('colorpicker-hue'),
+				sliderSaturation = colorpickerTemplate.find('colorpicker-saturation'),
+				colorpickerPreview = colorpickerTemplate.find('colorpicker-preview'),
+				pickerColorPointers = colorpickerTemplate.find('i');
 
-          $compile(colorpickerTemplate)($scope);
-
+			$compile(colorpickerTemplate)($scope);
+		  		  
+			var closeButton, probeButton;
+			(function inspect() {
+				var children = colorpickerTemplate.children().children();
+				var span = angular.element(children[children.length - 1]).children();
+				probeButton = angular.element(span[span.length - 2]);
+				closeButton = angular.element(span[span.length - 1]);
+			})()
+		  
+		  
           if (withInput) {
             var pickerColorInput = colorpickerTemplate.find('input');
             pickerColorInput
@@ -362,206 +394,210 @@ angular.module('colorpicker.module', [])
                 emitEvent('colorpicker-selected-saturation');
               });
 
-          if (fixedPosition) {
-            colorpickerTemplate.addClass('colorpicker-fixed-position');
-          }
+			if (fixedPosition) {
+				colorpickerTemplate.addClass('colorpicker-fixed-position');
+			}
 
-          colorpickerTemplate.addClass('colorpicker-position-' + position);
-          if (inline === 'true') {
-            colorpickerTemplate.addClass('colorpicker-inline');
-          }
+			colorpickerTemplate.addClass('colorpicker-position-' + position);
+			if (inline === 'true') {
+				colorpickerTemplate.addClass('colorpicker-inline');
+			}
 
-          target.append(colorpickerTemplate);
+			target.append(colorpickerTemplate);
 
-          if (ngModel) {
-            ngModel.$render = function () {
-              elem.val(ngModel.$viewValue);
+			if (ngModel) {
+				ngModel.$render = function () {
+					elem.val(ngModel.$viewValue);
+					update();
+				};
+			}
 
-              update();
-            };
-          }
+			elem.on('blur keyup change', function() {
+				update();
+			});
 
-          elem.on('blur keyup change', function() {
-            update();
-          });
+			elem.on('$destroy', function() {
+				colorpickerTemplate.remove();
+			});
 
-          elem.on('$destroy', function() {
-            colorpickerTemplate.remove();
-          });
+			function previewColor() {
+				try {
+					colorpickerPreview.css('backgroundColor', pickerColor[thisFormat]());
+				} catch (e) {
+					colorpickerPreview.css('backgroundColor', pickerColor.toHex());
+				}
+				sliderSaturation.css('backgroundColor', pickerColor.toHex(pickerColor.value.h, 1, 1, 1));
+				if (thisFormat === 'rgba') {
+					sliderAlpha.css.backgroundColor = pickerColor.toHex();
+				}
+			}
 
-          function previewColor() {
-            try {
-              colorpickerPreview.css('backgroundColor', pickerColor[thisFormat]());
-            } catch (e) {
-              colorpickerPreview.css('backgroundColor', pickerColor.toHex());
-            }
-            sliderSaturation.css('backgroundColor', pickerColor.toHex(pickerColor.value.h, 1, 1, 1));
-            if (thisFormat === 'rgba') {
-              sliderAlpha.css.backgroundColor = pickerColor.toHex();
-            }
-          }
+			function mousemove(event) {
+				var 
+					left = Slider.getLeftPosition(event),
+					top = Slider.getTopPosition(event),
+					slider = Slider.getSlider();
 
-          function mousemove(event) {
-            var 
-                left = Slider.getLeftPosition(event),
-                top = Slider.getTopPosition(event),
-                slider = Slider.getSlider();
+				Slider.setKnob(top, left);
 
-            Slider.setKnob(top, left);
+				if (slider.callLeft) {
+					pickerColor[slider.callLeft].call(pickerColor, left / 100);
+				}
+				if (slider.callTop) {
+					pickerColor[slider.callTop].call(pickerColor, top / 100);
+				}
+				previewColor();
+				var newColor = pickerColor[thisFormat]();
+				elem.val(newColor);
+				if (ngModel) {
+					$scope.$apply(ngModel.$setViewValue(newColor));
+				}
+				if (withInput) {
+					pickerColorInput.val(newColor);
+				}
+				return false;
+			}
 
-            if (slider.callLeft) {
-              pickerColor[slider.callLeft].call(pickerColor, left / 100);
-            }
-            if (slider.callTop) {
-              pickerColor[slider.callTop].call(pickerColor, top / 100);
-            }
-            previewColor();
-            var newColor = pickerColor[thisFormat]();
-            elem.val(newColor);
-            if (ngModel) {
-              $scope.$apply(ngModel.$setViewValue(newColor));
-            }
-            if (withInput) {
-              pickerColorInput.val(newColor);
-            }
-            return false;
-          }
+			function mouseup() {
+				emitEvent('colorpicker-selected');
+				$document.off('mousemove', mousemove);
+				$document.off('mouseup', mouseup);
+			}
 
-          function mouseup() {
-            emitEvent('colorpicker-selected');
-            $document.off('mousemove', mousemove);
-            $document.off('mouseup', mouseup);
-          }
+			function update(omitInnerInput) {
+				pickerColor.setColor(elem.val());
+				if (withInput && !omitInnerInput) {
+					pickerColorInput.val(elem.val());
+				}
+				pickerColorPointers.eq(0).css({
+					left: pickerColor.value.s * 100 + 'px',
+					top: 100 - pickerColor.value.b * 100 + 'px'
+				});
+				pickerColorPointers.eq(1).css('top', 100 * (1 - pickerColor.value.h) + 'px');
+				pickerColorPointers.eq(2).css('top', 100 * (1 - pickerColor.value.a) + 'px');
+				previewColor();
+			}
 
-          function update(omitInnerInput) {
-            pickerColor.setColor(elem.val());
-            if (withInput && !omitInnerInput) {
-              pickerColorInput.val(elem.val());
-            }
-            pickerColorPointers.eq(0).css({
-              left: pickerColor.value.s * 100 + 'px',
-              top: 100 - pickerColor.value.b * 100 + 'px'
-            });
-            pickerColorPointers.eq(1).css('top', 100 * (1 - pickerColor.value.h) + 'px');
-            pickerColorPointers.eq(2).css('top', 100 * (1 - pickerColor.value.a) + 'px');
-            previewColor();
-          }
+			function getColorpickerTemplatePosition() {
+				var
+				positionValue,
+				positionOffset = Helper.getOffset(elem[0]);
 
-          function getColorpickerTemplatePosition() {
-            var
-                positionValue,
-                positionOffset = Helper.getOffset(elem[0]);
+				if(angular.isDefined(attrs.colorpickerParent)) {
+					positionOffset.left = 0;
+					positionOffset.top = 0;
+				}
 
-            if(angular.isDefined(attrs.colorpickerParent)) {
-              positionOffset.left = 0;
-              positionOffset.top = 0;
-            }
+				if (position === 'top') {
+					positionValue =  {
+						'top': positionOffset.top - 147,
+						'left': positionOffset.left
+					};
+				} else if (position === 'right') {
+					positionValue = {
+						'top': positionOffset.top,
+						'left': positionOffset.left + 126
+					};
+				} else if (position === 'bottom') {
+					positionValue = {
+						'top': positionOffset.top + elem[0].offsetHeight + 2,
+						'left': positionOffset.left
+					};
+				} else if (position === 'left') {
+					positionValue = {
+						'top': positionOffset.top,
+						'left': positionOffset.left - 150
+					};
+				}
+				return {
+					'top': positionValue.top + 'px',
+					'left': positionValue.left + 'px'
+				};
+			}
 
-            if (position === 'top') {
-              positionValue =  {
-                'top': positionOffset.top - 147,
-                'left': positionOffset.left
-              };
-            } else if (position === 'right') {
-              positionValue = {
-                'top': positionOffset.top,
-                'left': positionOffset.left + 126
-              };
-            } else if (position === 'bottom') {
-              positionValue = {
-                'top': positionOffset.top + elem[0].offsetHeight + 2,
-                'left': positionOffset.left
-              };
-            } else if (position === 'left') {
-              positionValue = {
-                'top': positionOffset.top,
-                'left': positionOffset.left - 150
-              };
-            }
-            return {
-              'top': positionValue.top + 'px',
-              'left': positionValue.left + 'px'
-            };
-          }
+			function documentMousedownHandler() {
+				hideColorpickerTemplate();
+			}
 
-          function documentMousedownHandler() {
-            hideColorpickerTemplate();
-          }
+			function showColorpickerTemplate() {
 
-          function showColorpickerTemplate() {
+				if (!colorpickerTemplate.hasClass('colorpicker-visible')) {
+					update();
+					colorpickerTemplate
+						.addClass('colorpicker-visible')
+						.css(getColorpickerTemplatePosition());
+					emitEvent('colorpicker-shown');
 
-            if (!colorpickerTemplate.hasClass('colorpicker-visible')) {
-              update();
-              colorpickerTemplate
-                .addClass('colorpicker-visible')
-                .css(getColorpickerTemplatePosition());
-              emitEvent('colorpicker-shown');
+					if (inline === false) {
+						// register global mousedown event to hide the colorpicker
+						$document.on('mousedown', documentMousedownHandler);
+					}
 
-              if (inline === false) {
-                // register global mousedown event to hide the colorpicker
-                $document.on('mousedown', documentMousedownHandler);
-              }
+					if (attrs.colorpickerIsOpen) {
+						$scope[attrs.colorpickerIsOpen] = true;
+						if (!$scope.$$phase) {
+							$scope.$digest(); //trigger the watcher to fire
+						}
+					}
+				}
+			}
 
-              if (attrs.colorpickerIsOpen) {
-                $scope[attrs.colorpickerIsOpen] = true;
-                if (!$scope.$$phase) {
-                  $scope.$digest(); //trigger the watcher to fire
-                }
-              }
-            }
-          }
+			if (inline === false) {
+				elem.on('click', showColorpickerTemplate);
+			} else {
+				showColorpickerTemplate();
+			}
 
-          if (inline === false) {
-            elem.on('click', showColorpickerTemplate);
-          } else {
-            showColorpickerTemplate();
-          }
+			colorpickerTemplate.on('mousedown', function (event) {
+				event.stopPropagation();
+				event.preventDefault();
+			});
 
-          colorpickerTemplate.on('mousedown', function (event) {
-            event.stopPropagation();
-            event.preventDefault();
-          });
+			function emitEvent(name) {
+				if (ngModel) {
+					$scope.$emit(name, {
+						name: attrs.ngModel,
+						value: ngModel.$modelValue
+					});
+				}
+			}
 
-          function emitEvent(name) {
-            if (ngModel) {
-              $scope.$emit(name, {
-                name: attrs.ngModel,
-                value: ngModel.$modelValue
-              });
-            }
-          }
+			function hideColorpickerTemplate() {
+				if (colorpickerTemplate.hasClass('colorpicker-visible')) {
+				
+					colorpickerTemplate.removeClass('colorpicker-visible');
+					emitEvent('colorpicker-closed');
+					// unregister the global mousedown event
+					$document.off('mousedown', documentMousedownHandler);
 
-          function hideColorpickerTemplate() {
-            if (colorpickerTemplate.hasClass('colorpicker-visible')) {
-              colorpickerTemplate.removeClass('colorpicker-visible');
-              emitEvent('colorpicker-closed');
-              // unregister the global mousedown event
-              $document.off('mousedown', documentMousedownHandler);
+					if (attrs.colorpickerIsOpen) {
+						$scope[attrs.colorpickerIsOpen] = false;
+						if (!$scope.$$phase) {
+							$scope.$digest(); //trigger the watcher to fire
+						}
+					}
+				}
+			}
 
-              if (attrs.colorpickerIsOpen) {
-                $scope[attrs.colorpickerIsOpen] = false;
-                if (!$scope.$$phase) {
-                  $scope.$digest(); //trigger the watcher to fire
-                }
-              }
-            }
-          }
+			closeButton.on('click', function () {
+				hideColorpickerTemplate();
+			});
 
-          colorpickerTemplate.find('button').on('click', function () {
-            hideColorpickerTemplate();
-          });
+			probeButton.on('click', function () {
+				console.log("probe");
+			});
+			
+			if (attrs.colorpickerIsOpen) {
+				$scope.$watch(attrs.colorpickerIsOpen, function(shouldBeOpen) {
 
-          if (attrs.colorpickerIsOpen) {
-            $scope.$watch(attrs.colorpickerIsOpen, function(shouldBeOpen) {
+					if (shouldBeOpen === true) {
+						showColorpickerTemplate();
+					} else if (shouldBeOpen === false) {
+						hideColorpickerTemplate();
+					}
 
-              if (shouldBeOpen === true) {
-                showColorpickerTemplate();
-              } else if (shouldBeOpen === false) {
-                hideColorpickerTemplate();
-              }
-
-            });
-          }
+				});
+			}
         }
-      };
-    }]);
+	};
+}]);

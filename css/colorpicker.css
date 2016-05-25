@@ -50,6 +50,24 @@ colorpicker-alpha i {
   width: 100%;
   margin-top: -1px;
 }
+
+.colorpicker-row-col{
+	display: table-cell;
+	text-align: center;
+	vertical-align:middle;
+	line-height: 1em;
+}
+
+.colorpicker-row {
+	display:table;
+	width: 100%;
+}
+
+.colorpicker-probe-btn {
+	background-image : url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAFo9M/3AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAkNJREFUeNpi/P//PwMIMIGIxgXH5wEEEDNIRElJSYJh1sZzX0AcgAACizQ0NDC8efMGpNiOAaYJBgACiBFdgAnGiI6Ohsg0LTzBe+nei/8glSDMAhRL11OSYISpBAggDDNAYPLkyfu4ubkdV65cOYUBphWEWxef+Pzwxbv/8goKf5GNZGjYduv3/VcfWFSYGKTlxAWfPbh/H2GcXff1fN9F13qBTA4gFgJicSAWhfIZAAIIxQpkPGHCBDO4Fchg0aJFPIyMjJ8vXrwI9gSKgvjElA7G/3/Knz9/znDv3j1eFCuaFhzvvXr32X+/iOS/QkJCFjBxMNG88PjRl28//u9YeuI9uluAsXRslsvS6//rFxz/gs2xTL//MbHb/flo3JhgCXIcAzpmcJtxExTWzEDMD/U/KBwEYDEHEGBY4wIbWLVqFdvHjx9n/vjxI+Hx48cM796965gzZ04lXgP8/PxsODk5c4yMjFQ4ODiMgZoYrl69yvDq1auz79+/d7t8+fI7nAY0LzqpAPTBra8PjrBeO3uI4fXr1wyfP39e+eHDhzigC37hTE7AIF3Ey8XiF2CtxM/AxMiw6ej9r28/fj/Rme2+8+ePbwuA6l9jpGmgbcDw+n9FUYJbzd1MkeXus/cMu88++/bv3/8pdfEW5fjCBmxA/aJTf09/+c2g9P/nNzEezkuMjEx+QI1viQpdj+7r/EXbXnyY8eafOjRqWKBJlROIuYCYGwlzQOXhWYrlyfsPWpdX39r3ZcYHFSD/NgOJAAAJ9VcdYKUMbwAAAABJRU5ErkJggg==);
+	background-repeat: no-repeat;
+}
+
 colorpicker-hue {
   background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAABkCAMAAABw8qpSAAABLFBMVEUA/z8AuP//JAAA/33/3AAA/1ABAv8A/7r/AH7/jgD2AP8A//j/AEHmAP/XAP/HAP+4AP//ALyoAP+aAP+JAP97AP9rAP9cAP9MAP8+AP8tAP8fAP8PAP8ATv//AG7/cAD/vgD/APoAmv//ADH/AKwB/wMA5//4Eg4AL///AOr/UQD/nwAA/27/7AAA/+kAe/8Ayf8A/5sA/zEA/6z/ABEAEP8A/17/MgAA/9n/ACL/gAD/AJ0AXP8Aqv//AMoA/yHqFBb/zAD/AGD/ANsA9//1/wDk/wDV/wDF/wC3/wD/AI2m/wD/FACY/wCI/wB5/wBp/wD/YgBb/wBK/wA8/wAs/wAd/wAN/wAAPv8A/xH/AFAAi///rQAA/8r/+gAA1///QwAAH/8Abf8A/43c/JNGAAAAiUlEQVR4AQXBg2EDAAAAsMy2bds2ttp2+/8PTby79mDLsKJPq/oFPdk24dWXAxsGjRg1ZtykKdNmzJozb8GiJct63WjYl7fiWdOZkk0vOpyr2fVtyKl7FX2uXGjpcuxWDy69KdiRk5WRlpIUFxMVERLw78+vH1Unun1YV3ZkwKM1CYfq7nQK22sD03ITV2Aqp0IAAAAASUVORK5CYII=");
 }
@@ -72,7 +90,7 @@ colorpicker-alpha,
   position: relative;
 }
 .colorpicker input {
-  width: 100px;
+  width: 70px;
   font-size: 11px;
   color: #000;
   background-color: #fff;
