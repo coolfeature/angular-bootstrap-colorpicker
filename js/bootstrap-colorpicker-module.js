@@ -278,7 +278,8 @@ angular.module('colorpicker.module', [])
 	// ============================= COLORPICKER ==============================
 	// ========================================================================
 	
-    .directive('colorpicker', ['$document', '$compile', 'Color', 'Slider', 'Helper', function ($document, $compile, Color, Slider, Helper) {
+    .directive('colorpicker', ['$document', '$timeout', '$compile', 'Color', 'Slider', 'Helper'
+		, function ($document, $timeout, $compile, Color, Slider, Helper) {
       'use strict';
       return {
         require: '?ngModel',
@@ -291,9 +292,9 @@ angular.module('colorpicker.module', [])
 				fixedPosition = angular.isDefined(attrs.colorpickerFixedPosition) ? attrs.colorpickerFixedPosition : false,
 				target = angular.isDefined(attrs.colorpickerParent) ? elem.parent() : angular.element(document.body),
 				withInput = angular.isDefined(attrs.colorpickerWithInput) ? attrs.colorpickerWithInput : false,
-				inputTemplate = withInput ? '<input type="text" class="colorpicker-row-col" name="colorpicker-input" spellcheck="false">' : '',
-				pickerButton = !inline ? '<button class="colorpicker-probe-btn colorpicker-row-col" type="button">&nbsp;</button>' : '',
-				closeButton = !inline ? '<button type="button" class="colorpicker-row-col close close-colorpicker">&times;</button>' : '',
+				inputTemplate = withInput ? '<div class="colorpicker-row-col"><input type="text" name="colorpicker-input" spellcheck="false"></div>' : '',
+				pickerButton = !inline ? '<div class="colorpicker-row-col"><button class="colorpicker-probe-btn" type="button">&nbsp;</button></div>' : '',
+				closeButton = !inline ? '<div class="colorpicker-row-col"><button type="button" class="close close-colorpicker">&times;</button></div>' : '',
 				template =
 				  '<div class="colorpicker dropdown">' +
 					  '<div class="dropdown-menu">' +
@@ -317,13 +318,16 @@ angular.module('colorpicker.module', [])
 				pickerColorPointers = colorpickerTemplate.find('i');
 
 			$compile(colorpickerTemplate)($scope);
-		  		  
+
 			var closeButton, probeButton;
 			(function inspect() {
 				var children = colorpickerTemplate.children().children();
 				var span = angular.element(children[children.length - 1]).children();
-				probeButton = angular.element(span[span.length - 2]);
-				closeButton = angular.element(span[span.length - 1]);
+				var span = angular.element(children[children.length - 1]).children();
+				var probeButtonCol = angular.element(span[span.length - 2]).children()[0];
+				probeButton = angular.element(probeButtonCol);
+				var closeButtonCol = angular.element(span[span.length - 1]).children()[0];
+				closeButton = angular.element(closeButtonCol);
 			})()
 		  
 		  
@@ -517,6 +521,7 @@ angular.module('colorpicker.module', [])
 
 			function documentMousedownHandler() {
 				hideColorpickerTemplate();
+				finishProbing();
 			}
 
 			function showColorpickerTemplate() {
@@ -583,10 +588,6 @@ angular.module('colorpicker.module', [])
 				hideColorpickerTemplate();
 			});
 
-			probeButton.on('click', function () {
-				console.log("probe");
-			});
-			
 			if (attrs.colorpickerIsOpen) {
 				$scope.$watch(attrs.colorpickerIsOpen, function(shouldBeOpen) {
 
@@ -598,6 +599,50 @@ angular.module('colorpicker.module', [])
 
 				});
 			}
+			
+			
+			// ================================================================
+			// ================================================================
+			// ================================================================
+			
+			$scope.isProbing = false;
+						
+			probeButton.on('click', function () {
+				toggleProbing();
+			});
+
+			function toggleProbing() {
+				if ($scope.isProbing) {
+					finishProbing();
+				} else {
+					startProbing();
+				}
+			}
+			
+			function startProbing() {
+				console.log("start");
+				if (!$scope.isProbing) {
+					$scope.isProbing = !$scope.isProbing;
+					var eyedropperClass = "eyedropper-cursor";
+					$timeout(function(){
+					$document.find("body").addClass(eyedropperClass);
+					probeButton.addClass(eyedropperClass);
+					});
+				}
+			}
+			
+			function finishProbing() {
+				console.log("finish");
+				if ($scope.isProbing) {
+					$scope.isProbing = !$scope.isProbing;
+					var eyedropperClass = "eyedropper-cursor";
+					$timeout(function(){
+					$document.find("body").removeClass(eyedropperClass);
+					probeButton.removeClass(eyedropperClass);
+					});
+				}
+			}
+			
         }
 	};
 }]);
