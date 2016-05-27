@@ -443,7 +443,7 @@ angular.module('colorpicker.module', [])
 					slider = Slider.getSlider();
 
 				Slider.setKnob(top, left);
-
+				console.log(slider.callLeft,slider.callTop,left,top)
 				if (slider.callLeft) {
 					pickerColor[slider.callLeft].call(pickerColor, left / 100);
 				}
@@ -452,6 +452,7 @@ angular.module('colorpicker.module', [])
 				}
 				previewColor();
 				var newColor = pickerColor[thisFormat]();
+
 				elem.val(newColor);
 				if (ngModel) {
 					$scope.$apply(ngModel.$setViewValue(newColor));
@@ -607,7 +608,7 @@ angular.module('colorpicker.module', [])
 			
 			$scope.isProbing = false;
 						
-			probeButton.on('click', function () {
+			probeButton.on('click', function (event) {
 				toggleProbing();
 			});
 
@@ -619,15 +620,41 @@ angular.module('colorpicker.module', [])
 				}
 			}
 			
+			var c = document.getElementById("canvas");
+			var img = new Image();
+			img.crossOrigin = "Anonymous";
+			img.onload = function(){
+			  c.getContext("2d").drawImage(img,0,0);
+			};
+			img.src = 'http://i.imgur.com/yf6d9SX.jpg';
+
+			function probeMove(event) {
+				if (event.target.nodeName === "CANVAS") {
+					var rect = event.target.getBoundingClientRect();
+					var x = event.clientX - rect.left;
+					var y = event.clientY - rect.top;
+					console.log(x,y)
+					var imgData = event.target.getContext('2d').getImageData(x, y, 1, 1).data;
+					var R = imgData[0];
+					var G = imgData[1];
+					var B = imgData[2];
+					var A = imgData[3];
+					var val = "rgba(" + R + "," + G + "," + B + "," + A + ")";
+					pickerColor.setColor(val);
+					previewColor();
+					console.log("probe click",event.target.nodeName,R,G,B)
+				}
+				return false;
+			}
+			
 			function startProbing() {
 				console.log("start");
 				if (!$scope.isProbing) {
 					$scope.isProbing = !$scope.isProbing;
 					var eyedropperClass = "eyedropper-cursor";
-					$timeout(function(){
 					$document.find("body").addClass(eyedropperClass);
+					$document.on('mousemove',probeMove)
 					probeButton.addClass(eyedropperClass);
-					});
 				}
 			}
 			
@@ -636,10 +663,9 @@ angular.module('colorpicker.module', [])
 				if ($scope.isProbing) {
 					$scope.isProbing = !$scope.isProbing;
 					var eyedropperClass = "eyedropper-cursor";
-					$timeout(function(){
 					$document.find("body").removeClass(eyedropperClass);
+					$document.off('mousemove',probeMove)
 					probeButton.removeClass(eyedropperClass);
-					});
 				}
 			}
 			
