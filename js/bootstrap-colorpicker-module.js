@@ -443,7 +443,7 @@ angular.module('colorpicker.module', [])
 					slider = Slider.getSlider();
 
 				Slider.setKnob(top, left);
-				console.log(slider.callLeft,slider.callTop,left,top)
+
 				if (slider.callLeft) {
 					pickerColor[slider.callLeft].call(pickerColor, left / 100);
 				}
