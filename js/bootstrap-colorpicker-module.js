@@ -615,11 +615,13 @@ angular.module('colorpicker.module', [])
 			});
 
 			function toggleProbing() {
-				if ($scope.isProbing) {
-					finishProbing();
-				} else {
-					startProbing();
-				}
+				$timeout(function(){
+					if ($scope.isProbing) {
+						finishProbing();
+					} else {
+						startProbing();
+					}
+				})
 			}
 			
 			function probeMove(event) {
