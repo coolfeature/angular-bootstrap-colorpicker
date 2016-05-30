@@ -282,9 +282,9 @@ angular.module('colorpicker.module', [])
 		, function ($document, $timeout, $compile, Color, Slider, Helper) {
       'use strict';
       return {
-        require: '?ngModel',
-        restrict: 'A',
-        link: function ($scope, elem, attrs, ngModel) {
+        require: '?ngModel'
+        ,restrict: 'A'
+        ,link: function ($scope, elem, attrs, ngModel) {
 			var
 				thisFormat = attrs.colorpicker ? attrs.colorpicker : 'hex',
 				position = angular.isDefined(attrs.colorpickerPosition) ? attrs.colorpickerPosition : 'bottom',
@@ -319,6 +319,7 @@ angular.module('colorpicker.module', [])
 
 			$compile(colorpickerTemplate)($scope);
 
+			// keep the references cached
 			var closeButton, probeButton;
 			(function inspect() {
 				var children = colorpickerTemplate.children().children();
@@ -559,11 +560,12 @@ angular.module('colorpicker.module', [])
 				event.preventDefault();
 			});
 
-			function emitEvent(name) {
+			function emitEvent(name,elm) {
 				if (ngModel) {
 					$scope.$emit(name, {
-						name: attrs.ngModel,
-						value: ngModel.$modelValue
+						name: attrs.ngModel
+						,value: ngModel.$modelValue
+						,elm : elm
 					});
 				}
 			}
@@ -620,20 +622,11 @@ angular.module('colorpicker.module', [])
 				}
 			}
 			
-			var c = document.getElementById("canvas");
-			var img = new Image();
-			img.crossOrigin = "Anonymous";
-			img.onload = function(){
-			  c.getContext("2d").drawImage(img,0,0);
-			};
-			img.src = 'http://i.imgur.com/yf6d9SX.jpg';
-
 			function probeMove(event) {
 				if (event.target.nodeName === "CANVAS") {
 					var rect = event.target.getBoundingClientRect();
 					var x = event.clientX - rect.left;
 					var y = event.clientY - rect.top;
-					console.log(x,y)
 					var imgData = event.target.getContext('2d').getImageData(x, y, 1, 1).data;
 					var R = imgData[0];
 					var G = imgData[1];
@@ -642,30 +635,34 @@ angular.module('colorpicker.module', [])
 					var val = "rgba(" + R + "," + G + "," + B + "," + A + ")";
 					pickerColor.setColor(val);
 					previewColor();
-					console.log("probe click",event.target.nodeName,R,G,B)
+					var newColor = pickerColor[thisFormat]();
+					elem.val(newColor);
+					if (ngModel) {
+						$scope.$apply(ngModel.$setViewValue(newColor));
+					}
+					if (withInput) {
+						pickerColorInput.val(newColor);
+					}
+					emitEvent('colorpicker-probe-supported',angular.element(event.target));
+				} else {
+					emitEvent('colorpicker-probe-unsupported',angular.element(event.target));
 				}
 				return false;
 			}
 			
 			function startProbing() {
-				console.log("start");
 				if (!$scope.isProbing) {
 					$scope.isProbing = !$scope.isProbing;
-					var eyedropperClass = "eyedropper-cursor";
-					$document.find("body").addClass(eyedropperClass);
+					emitEvent('colorpicker-probe-started',probeButton);
 					$document.on('mousemove',probeMove)
-					probeButton.addClass(eyedropperClass);
 				}
 			}
 			
 			function finishProbing() {
-				console.log("finish");
 				if ($scope.isProbing) {
 					$scope.isProbing = !$scope.isProbing;
-					var eyedropperClass = "eyedropper-cursor";
-					$document.find("body").removeClass(eyedropperClass);
+					emitEvent('colorpicker-probe-finished',probeButton);
 					$document.off('mousemove',probeMove)
-					probeButton.removeClass(eyedropperClass);
 				}
 			}
 			
