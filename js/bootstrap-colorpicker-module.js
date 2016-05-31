@@ -294,7 +294,7 @@ angular.module('colorpicker.module', [])
 				withInput = angular.isDefined(attrs.colorpickerWithInput) ? attrs.colorpickerWithInput : false,
 				inputTemplate = withInput ? '<div class="colorpicker-row-col"><input type="text" name="colorpicker-input" spellcheck="false"></div>' : '',
 				pickerButton = !inline ? '<div class="colorpicker-row-col"><button class="colorpicker-probe-btn" type="button">&nbsp;</button></div>' : '',
-				closeButton = !inline ? '<div class="colorpicker-row-col"><button type="button" class="close close-colorpicker">&times;</button></div>' : '',
+				closeButton = !inline ? '<div class="colorpicker-row-col"><button type="button" class="close-colorpicker colorpicker-close-btn">&times;</button></div>' : '',
 				template =
 				  '<div class="colorpicker dropdown">' +
 					  '<div class="dropdown-menu">' +
