@@ -590,6 +590,7 @@ angular.module('colorpicker.module', [])
 
 			closeButton.on('click', function () {
 				hideColorpickerTemplate();
+				finishProbing();
 			});
 
 			if (attrs.colorpickerIsOpen) {
@@ -610,19 +611,19 @@ angular.module('colorpicker.module', [])
 			// ================================================================
 			
 			$scope.isProbing = false;
-						
-			probeButton.on('click', function (event) {
-				toggleProbing();
+			var eyedropperBanClass = "eyedropper-cursor-ban";	
+			
+			probeButton.on('mousedown', function (event) {
+				event.preventDefault();
+				toggleProbing(event);
 			});
 
-			function toggleProbing() {
-				$timeout(function(){
-					if ($scope.isProbing) {
-						finishProbing();
-					} else {
-						startProbing();
-					}
-				})
+			function toggleProbing(event) {
+				if ($scope.isProbing) {
+					finishProbing(event);
+				} else {
+					startProbing(event);
+				}
 			}
 			
 			function probeMoveUpdate (r,g,b,a) {
@@ -644,20 +645,31 @@ angular.module('colorpicker.module', [])
 				return false;
 			}
 			
-			function startProbing() {
+
+			function startProbing(event) {
 				if (!$scope.isProbing) {
 					$scope.isProbing = !$scope.isProbing;
-					emitEvent('colorpicker-probe-started',probeButton);
-					$document.on('mousemove',probeMove)
+
+					
+					$timeout(function(){
+						$document.find("body").addClass(eyedropperBanClass);
+						probeButton.addClass(eyedropperBanClass);
+						emitEvent('colorpicker-probe-started',probeButton);
+						$document.on('mousemove',probeMove)
+					});
 				}
+				return false;
 			}
 			
-			function finishProbing() {
+			function finishProbing(event) {
 				if ($scope.isProbing) {
 					$scope.isProbing = !$scope.isProbing;
+					$document.find("body").removeClass(eyedropperBanClass);
+					probeButton.removeClass(eyedropperBanClass);
 					emitEvent('colorpicker-probe-finished',probeButton);
 					$document.off('mousemove',probeMove)
 				}
+				return false;
 			}
 			
         }
