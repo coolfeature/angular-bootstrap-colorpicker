@@ -78,6 +78,9 @@ colorpicker-alpha,
 	font-size: 11px;
 	color: #000;
 	background-color: #fff;
+
+	
+	height : 20px;
 	border : 1px solid #d9d9d9;
 }
 .colorpicker.alpha {
