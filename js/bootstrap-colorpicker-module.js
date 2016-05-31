@@ -560,12 +560,13 @@ angular.module('colorpicker.module', [])
 				event.preventDefault();
 			});
 
-			function emitEvent(name,elm) {
+			function emitEvent(name,elm,cb) {
 				if (ngModel) {
 					$scope.$emit(name, {
 						name: attrs.ngModel
 						,value: ngModel.$modelValue
 						,elm : elm
+						,cb : cb
 					});
 				}
 			}
@@ -624,31 +625,22 @@ angular.module('colorpicker.module', [])
 				})
 			}
 			
-			function probeMove(event) {
-				if (event.target.nodeName === "CANVAS") {
-					var rect = event.target.getBoundingClientRect();
-					var x = event.clientX - rect.left;
-					var y = event.clientY - rect.top;
-					var imgData = event.target.getContext('2d').getImageData(x, y, 1, 1).data;
-					var R = imgData[0];
-					var G = imgData[1];
-					var B = imgData[2];
-					var A = imgData[3];
-					var val = "rgba(" + R + "," + G + "," + B + "," + A + ")";
-					pickerColor.setColor(val);
-					previewColor();
-					var newColor = pickerColor[thisFormat]();
-					elem.val(newColor);
-					if (ngModel) {
-						$scope.$apply(ngModel.$setViewValue(newColor));
-					}
-					if (withInput) {
-						pickerColorInput.val(newColor);
-					}
-					emitEvent('colorpicker-probe-supported',angular.element(event.target));
-				} else {
-					emitEvent('colorpicker-probe-unsupported',angular.element(event.target));
+			function probeMoveUpdate (r,g,b,a) {
+				var val = "rgba(" + r + "," + g + "," + b + "," + a + ")";
+				pickerColor.setColor(val);
+				previewColor();
+				var newColor = pickerColor[thisFormat]();
+				elem.val(newColor);
+				if (ngModel) {
+					$scope.$apply(ngModel.$setViewValue(newColor));
 				}
+				if (withInput) {
+					pickerColorInput.val(newColor);
+				}
+			}
+
+			function probeMove(event) {
+				emitEvent('colorpicker-probe-move',angular.element(event.target),probeMoveUpdate);
 				return false;
 			}
 			

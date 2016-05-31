@@ -41,11 +41,7 @@ module.controller('Main',['$scope','$document','$timeout',function($scope,$docum
 		data.elm.removeClass(eyedropperClass);
 		console.log("colorpicker-probe-finished data",data)
 	})
-	$scope.$on("colorpicker-probe-supported",function(event,data){
+	$scope.$on("colorpicker-probe-move",function(event,data){
 		console.log("colorpicker-probe-supported data",data)
-	})
-	$scope.$on("colorpicker-probe-unsupported",function(event,data){
-		
-		console.log("colorpicker-probe-unsupported data",data)
 	})
 }]);

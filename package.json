@@ -7,12 +7,9 @@
     "test": "test"
   },
   "devDependencies": {
-    "gulp": "^3.9.0",
-    "gulp-jshint": "^1.11.2",
-    "gulp-less": "^3.0.3",
-    "gulp-minify-css": "^1.2.1",
-    "gulp-rename": "^1.2.2",
-    "gulp-uglify": "^1.4.0",
+    "grunt": "~0.4.2",
+	"grunt-contrib-uglify" : "^1.0.1",
+	"grunt-contrib-less": "~0.8.2",
     "jasmine-core": "^2.3.4",
     "karma": "^0.13.9",
     "karma-chrome-launcher": "^0.2.0",
@@ -26,7 +23,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/buberdds/angular-bootstrap-colorpicker"
+    "url": "https://github.com/coolfeature/angular-bootstrap-colorpicker"
   },
   "keywords": [
     "angular",
@@ -35,8 +32,5 @@
   ],
   "author": "Michal Zielenkiewicz",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/buberdds/angular-bootstrap-colorpicker/issues"
-  },
-  "homepage": "https://github.com/buberdds/angular-bootstrap-colorpicker"
+  "homepage": "https://github.com/coolfeature/angular-bootstrap-colorpicker"
 }
