@@ -293,8 +293,8 @@ angular.module('colorpicker.module', [])
 				target = angular.isDefined(attrs.colorpickerParent) ? elem.parent() : angular.element(document.body),
 				withInput = angular.isDefined(attrs.colorpickerWithInput) ? attrs.colorpickerWithInput : false,
 				inputTemplate = withInput ? '<div class="colorpicker-row-col"><input type="text" name="colorpicker-input" spellcheck="false"></div>' : '',
-				pickerButton = !inline ? '<div class="colorpicker-row-col"><button class="colorpicker-probe-btn" type="button">&nbsp;</button></div>' : '',
-				closeButton = !inline ? '<div class="colorpicker-row-col"><button type="button" class="close-colorpicker colorpicker-close-btn">&times;</button></div>' : '',
+				pickerButton = !inline ? '<div class="colorpicker-row-col"><button class="btn colorpicker-probe-btn" type="button">&nbsp;</button></div>' : '',
+				closeButton = !inline ? '<div class="colorpicker-row-col"><button type="button" class="btn close-colorpicker colorpicker-close-btn">&times;</button></div>' : '',
 				template =
 				  '<div class="colorpicker dropdown">' +
 					  '<div class="dropdown-menu">' +
@@ -649,14 +649,10 @@ angular.module('colorpicker.module', [])
 			function startProbing(event) {
 				if (!$scope.isProbing) {
 					$scope.isProbing = !$scope.isProbing;
-
-					
-					$timeout(function(){
-						$document.find("body").addClass(eyedropperBanClass);
-						probeButton.addClass(eyedropperBanClass);
-						emitEvent('colorpicker-probe-started',probeButton);
-						$document.on('mousemove',probeMove)
-					});
+					$document.find("body").addClass(eyedropperBanClass);
+					probeButton.addClass(eyedropperBanClass);
+					emitEvent('colorpicker-probe-started',probeButton);
+					$document.on('mousemove',probeMove)
 				}
 				return false;
 			}
